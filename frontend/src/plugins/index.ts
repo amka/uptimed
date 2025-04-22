@@ -11,6 +11,9 @@ import router from '../router'
 
 // Types
 import type { App } from 'vue'
+import { globalRouter } from '@/router/global'
+
+globalRouter.router = router
 
 export function registerPlugins (app: App) {
   app

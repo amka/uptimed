@@ -8,3 +8,20 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+html,
+body {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+}
+
+a {
+    color: rgb(var(--v-theme-accent));
+}
+
+.gradient-text {
+    background: linear-gradient(to right, rgb(var(--v-theme-primary)), rgb(var(--v-theme-accent)));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

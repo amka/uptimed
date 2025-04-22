@@ -2,41 +2,17 @@
 import api from '@/api/api'
 import { isAxiosError } from 'axios'
 import { defineStore } from 'pinia'
-
-export interface AuthState {
-  token: string
-}
-
-export interface LoginParams {
-  email: string
-  password: string
-}
-
-export interface RegisterParams {
-  name: string
-  email: string
-  password: string
-}
-
-export interface ResetPasswordParams {
-  token: string
-  password: string
-}
-
-
-export interface LoginResponse {
-  token: string
-  pid: string
-  name: string
-  is_verified: boolean
-}
+import { Md5 } from 'ts-md5';
+import type { LoginParams, RegisterParams, ResetPasswordParams, User } from '@/types/auth'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<string | null>()
+  const token = ref<string | null>(localStorage.getItem('authToken'))
+  const user = ref<User | null>()
   const loading = ref(false)
   const error = ref()
 
-  const isAuthenticated = computed(() => user.value !== '')
+  const isAuthenticated = computed(() => token.value !== '')
+  const userAvatar = computed(() => `https://gravatar.com/avatar/${Md5.hashStr(user.value!.email)}`)
 
   const login = async (loginParams: LoginParams) => {
     try {
@@ -100,7 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    user, loading, error,
+    user, userAvatar, loading, error,
     isAuthenticated,
     login,
     register,

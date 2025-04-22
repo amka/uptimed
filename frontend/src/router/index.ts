@@ -5,7 +5,7 @@
  */
 
 // Composables
-import { createRouter, createWebHistory, type RouteLocation } from 'vue-router/auto'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import { useAuthStore } from '@/stores/auth'
@@ -34,15 +34,13 @@ router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
 })
 
-router.beforeEach(async (to: RouteLocation) => {
+router.beforeEach(async (to: RouteLocationNormalized) => {
   const authStore = useAuthStore()
 
-  if (
-    // make sure the user is authenticated
-    authStore.isAuthenticated &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== '/auth/login'
-  ) {
+  console.log(`user: ${authStore.user}; isAuthenticated: ${authStore.isAuthenticated}`)
+
+  // Validate authentication only for private pages
+  if (!authStore.isAuthenticated && to.meta.public != true) {
     // redirect the user to the login page
     return { name: '/auth/login' }
   }

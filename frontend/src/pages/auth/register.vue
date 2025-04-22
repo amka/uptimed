@@ -6,11 +6,11 @@
 
         <v-card class="elevation-12 rounded-lg mt-8">
           <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>Login</v-toolbar-title>
+            <v-toolbar-title>Register</v-toolbar-title>
           </v-toolbar>
 
           <v-card-text>
-            <v-form @submit.prevent="handleLogin">
+            <v-form @submit.prevent="handleSubmit">
               <v-text-field
                 v-model="form.email"
                 :error-messages="errors.email"
@@ -42,15 +42,15 @@
                 type="submit"
                 variant="flat"
               >
-                Login
+                Sign Up
               </v-btn>
             </v-form>
           </v-card-text>
 
           <v-card-actions class="justify-center">
             <p>
-              Don't have an account?
-              <router-link :to="{ name: '/auth/register' }">Sign Up</router-link>
+              Already have an account?
+              <router-link :to="{ name: '/auth/login' }">Sign In</router-link>
             </p>
           </v-card-actions>
         </v-card>
@@ -60,28 +60,29 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useAuthStore } from '@/stores/auth';
+  import { reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
   import { useMessagesStore } from '@/stores/messages';
-  import type { LoginParams } from '@/types/auth';
+  import type { RegisterParams } from '@/types/auth';
+
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const messagesStore = useMessagesStore();
 
   interface FormErrors {
     email?: string[];
     password?: string[];
   }
 
-  const form = reactive<LoginParams>({
+  const form = reactive<RegisterParams>({
     email: '',
     password: '',
+    name: '',
   });
-
-  const router = useRouter();
-  const messagesStore = useMessagesStore();
 
   const errors = reactive<FormErrors>({});
   const isSubmitting = ref(false);
-  const authStore = useAuthStore();
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -107,23 +108,22 @@
     return isValid;
   };
 
-  const handleLogin = async () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
     isSubmitting.value = true;
 
     try {
-      const success = await authStore.login({
+      const payload: RegisterParams = {
         email: form.email,
         password: form.password,
-      });
+        name: form.email.substring(0, form.email.indexOf('@')),
+      };
 
-      if (success) {
-        messagesStore.add({ text: 'Welcome back!', color: 'success' });
-        router.push('/')
-      } else {
-        throw Error
-      }
+      await authStore.register(payload);
+
+      messagesStore.add('Registration successful! Redirecting to login...');
+      router.push({ name: '/auth/login' });
     } catch (error) {
       if (error instanceof Error) {
         messagesStore.add({ text: error.message, color: 'error' });
@@ -136,13 +136,11 @@
     } finally {
       isSubmitting.value = false;
     }
-
-
   };
 </script>
 
 <route lang="yaml">
-meta:
-  layout: outer
-  public: true
-</route>
+  meta:
+    layout: outer
+    public: true
+  </route>

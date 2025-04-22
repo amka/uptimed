@@ -1,3 +1,4 @@
+import { globalRouter } from '@/router/global'
 import axios from 'axios'
 
 const api = axios.create({
@@ -16,11 +17,17 @@ api.interceptors.request.use(config => {
 
 // Response interceptor
 api.interceptors.response.use(
+  /**
+   * Identity function that returns the response as is.
+   *
+   * @param response The response object to be returned.
+   * @returns The same response object that was passed in.
+   */
   response => response,
   error => {
     if (error.response?.status === 401) {
       localStorage.removeItem('authToken')
-      window.location.pathname = '/login'
+      globalRouter.router?.push('/auth/login');
     }
     return Promise.reject(error)
   }

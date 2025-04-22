@@ -6,10 +6,7 @@
   //
 </script>
 
-<route lang="json">
-{
-  "meta": {
-    "requiresAuth": true
-  }
-}
+<route lang="yaml">
+meta:
+  layout: inner
 </route>
