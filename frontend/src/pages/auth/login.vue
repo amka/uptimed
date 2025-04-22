@@ -122,9 +122,10 @@
         messagesStore.add({ text: 'Welcome back!', color: 'success' });
         router.push('/')
       } else {
-        throw Error
+        throw Error(authStore.error)
       }
     } catch (error) {
+
       if (error instanceof Error) {
         messagesStore.add({ text: error.message, color: 'error' });
       } else {

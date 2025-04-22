@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = null
       return true
     } catch (err) {
-      error.value = isAxiosError(err) ? err.response?.data?.message : 'Login failed'
+      error.value = isAxiosError(err) ? err.response?.data?.description : 'Login failed'
       return false
     } finally {
       loading.value = false
