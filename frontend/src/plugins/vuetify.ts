@@ -16,9 +16,9 @@ const myCustomLightTheme = {
   colors: {
     background: '#fcf8fb',
     surface: '#fcf8fb',
-    primary: '#63315c',
-    secondary: '#d7ac98',
-    accent: '#906f47',
+    primary: '#fde074',
+    secondary: '#98b204',
+    accent: '#e184b3',
   },
 }
 
@@ -27,16 +27,16 @@ const myCustomDarkTheme = {
   colors: {
     background: '#070306',
     surface: '#070306',
-    primary: '#ce9cc7',
-    secondary: '#673c28',
-    accent: '#b8986f',
+    primary: '#e9c648',
+    secondary: '#e1fb4b',
+    accent: '#7b1e4d',
   },
 }
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: 'myCustomLightTheme',
     themes: {
       myCustomDarkTheme,
       myCustomLightTheme,
